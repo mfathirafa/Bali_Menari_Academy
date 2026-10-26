@@ -100,12 +100,16 @@ export default function RootLayout({
               telephone: "+62-812-3966-9880",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Jalan Sekar Tunjung XV No. 1A",
+                streetAddress: "Jalan Tukad Yeh Aya IX No. 90",
                 addressLocality: "Denpasar",
                 addressRegion: "Bali",
-                postalCode: "80237",
+                postalCode: "80226",
                 addressCountry: "ID",
               },
+              sameAs: [
+                "https://www.instagram.com/balimenariacademy",
+                "https://warmaheritagegroup.com/companies/bali-menari-academy"
+              ],
               parentOrganization: {
                 "@type": "Organization",
                 name: "Warma Heritage Group",

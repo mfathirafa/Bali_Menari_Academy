@@ -5,7 +5,7 @@
   --color-white: #FFFFFF;
   --color-black: #000000;
 
-  /* Warm greyscale — sama persis dengan WHG */
+  /* Warm greyscale — selaras dengan WHG */
   --color-gray-50: #FAFAFA;
   --color-gray-100: #F5F5F5;
   --color-gray-200: #E8E8E8;
@@ -17,8 +17,15 @@
   --color-gray-800: #1F1F1F;
   --color-gray-900: #141414;
 
-  --color-brand-primary: #141414;
-  --color-brand-secondary: #6B6B6B;
+  /* BMA Official Brand Palette (dari Brand Guidelines PDF) */
+  --color-bma-brown: #693A22;      /* Primary Terracotta Brown */
+  --color-bma-cream: #E9E2D1;      /* Warm Almond Cream */
+  --color-bma-blue: #A7BFD9;       /* Soft Sky Blue */
+  --color-bma-olive: #A8A254;      /* Tropical Warm Olive */
+  --color-bma-dark-olive: #44442B; /* Deep Dark Olive */
+
+  --color-brand-primary: #693A22;
+  --color-brand-secondary: #44442B;
   --color-brand-bg: #FAFAFA;
   --color-brand-surface: #F5F5F5;
 
@@ -69,13 +76,13 @@
 
   /* Selection color */
   ::selection {
-    background-color: #141414;
+    background-color: #693A22;
     color: #FAFAFA;
   }
 
   /* Focus visible */
   :focus-visible {
-    outline: 1.5px solid #141414;
+    outline: 1.5px solid #693A22;
     outline-offset: 3px;
   }
 
