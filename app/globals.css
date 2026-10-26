@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+@theme {
+  /* ===== COLORS ===== */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Warm greyscale dari WHG */
+  --color-gray-50: #FAFAFA;
+  --color-gray-100: #F5F5F5;
+  --color-gray-200: #E8E8E8;
+  --color-gray-300: #D1D1D1;
+  --color-gray-400: #9E9E9E;
+  --color-gray-500: #6B6B6B;
+  --color-gray-600: #4A4A4A;
+  --color-gray-700: #353535;
+  --color-gray-800: #1F1F1F;
+  --color-gray-900: #141414;
+
+  /* BMA brand accent: soft terracotta/rose untuk accent dance school */
+  --color-brand-primary: #141414;
+  --color-brand-secondary: #6B6B6B;
+  --color-brand-bg: #FAFAFA;
+  --color-brand-accent: #B5634A;
+  --color-brand-accent-light: #F3E9E4;
+
+  /* ===== TYPOGRAPHY ===== */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-serif: 'Sorts Mill Goudy', Georgia, serif;
+
+  /* ===== SPACING ===== */
+  --spacing-section: 7rem;
+  --spacing-container: 1440px;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  body {
+    background-color: var(--color-brand-bg);
+    color: var(--color-brand-primary);
+    font-family: var(--font-sans);
+    font-variant-numeric: lining-nums tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-serif);
+    font-weight: 400;
+    color: var(--color-brand-primary);
+    letter-spacing: -0.01em;
+    font-variant-numeric: lining-nums tabular-nums;
+  }
+
+  section[id] {
+    scroll-margin-top: 88px;
+  }
+
+  ::selection {
+    background-color: #141414;
+    color: #FAFAFA;
+  }
+
+  :focus-visible {
+    outline: 1.5px solid #141414;
+    outline-offset: 3px;
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 { transition-delay: 0.08s; }
+  .reveal-delay-2 { transition-delay: 0.16s; }
+  .reveal-delay-3 { transition-delay: 0.24s; }
+  .reveal-delay-4 { transition-delay: 0.32s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
+}
