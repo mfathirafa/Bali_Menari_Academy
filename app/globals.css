@@ -5,7 +5,7 @@
   --color-white: #FFFFFF;
   --color-black: #000000;
 
-  /* Warm greyscale dari WHG */
+  /* Warm greyscale — sama persis dengan WHG */
   --color-gray-50: #FAFAFA;
   --color-gray-100: #F5F5F5;
   --color-gray-200: #E8E8E8;
@@ -17,12 +17,10 @@
   --color-gray-800: #1F1F1F;
   --color-gray-900: #141414;
 
-  /* BMA brand accent: soft terracotta/rose untuk accent dance school */
   --color-brand-primary: #141414;
   --color-brand-secondary: #6B6B6B;
   --color-brand-bg: #FAFAFA;
-  --color-brand-accent: #B5634A;
-  --color-brand-accent-light: #F3E9E4;
+  --color-brand-surface: #F5F5F5;
 
   /* ===== TYPOGRAPHY ===== */
   --font-sans: 'Inter', system-ui, sans-serif;
@@ -64,15 +62,18 @@
     font-variant-numeric: lining-nums tabular-nums;
   }
 
+  /* Section anchor scroll offset for fixed navbar */
   section[id] {
     scroll-margin-top: 88px;
   }
 
+  /* Selection color */
   ::selection {
     background-color: #141414;
     color: #FAFAFA;
   }
 
+  /* Focus visible */
   :focus-visible {
     outline: 1.5px solid #141414;
     outline-offset: 3px;
@@ -96,11 +97,18 @@
   .reveal-delay-3 { transition-delay: 0.24s; }
   .reveal-delay-4 { transition-delay: 0.32s; }
 
+  /* Accessibility & Fallback */
   @media (prefers-reduced-motion: reduce) {
     .reveal {
       opacity: 1 !important;
       transform: none !important;
       transition: none !important;
     }
+  }
+
+  /* Image drag prevention */
+  img {
+    user-select: none;
+    -webkit-user-drag: none;
   }
 }

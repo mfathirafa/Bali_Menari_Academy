@@ -1,15 +1,19 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 // ===== CONSTANTS =====
 const WA_NUMBER = '6281239669880';
-const WA_MESSAGE = 'Halo%20Bali%20Menari%20Academy%2C%20saya%20tertarik%20dengan%20kelas%20tari%20Anda.%20Boleh%20saya%20tahu%20lebih%20lanjut%3F';
+const WA_MESSAGE_ID = 'Halo%20Bali%20Menari%20Academy%2C%20saya%20tertarik%20dengan%20kelas%20tari%20Anda.%20Boleh%20saya%20tahu%20lebih%20lanjut%3F';
+const WA_MESSAGE_EN = 'Hello%20Bali%20Menari%20Academy%2C%20I%20am%20interested%20in%20your%20dance%20classes.%20Could%20you%20tell%20me%20more%3F';
 const WHG_URL = 'https://warmaheritagegroup.com';
 const WHG_BMA_URL = 'https://warmaheritagegroup.com/companies/bali-menari-academy';
+const COMPANY_EMAIL = 'warmaheritagegroup@gmail.com';
+const COMPANY_PHONE = '+62 812-3966-9880';
+const COMPANY_ADDRESS = 'Jalan Sekar Tunjung XV No. 1A, Denpasar, Bali 80237';
 
-// ===== PHOTO DATA (from WHG database) =====
+// ===== PHOTO DATA =====
 const GALLERY_PHOTOS = [
   { id: 59, src: '/images/gallery/frame-55.webp', titleId: 'Latihan Dasar Kuda-Kuda & Agem Tari Tradisional Bali', titleEn: "Basic 'Agem' Stance Training for Young Balinese Dancers" },
   { id: 60, src: '/images/gallery/frame-56.webp', titleId: 'Sesi Pengarahan Gerak & Filosofi Tari oleh Instruktur BMA', titleEn: 'Philosophy & Choreography Briefing by BMA Instructor' },
@@ -37,88 +41,21 @@ const GALLERY_PHOTOS = [
   { id: 82, src: '/images/gallery/frame-83.webp', titleId: 'Gerak Penuh Ekspresi Ceria Siswa Tari Cilik Berbakat', titleEn: 'Expressive and Joyful Performance by Talented Young Dancer' },
 ];
 
-// ===== PROGRAMS DATA =====
-const PROGRAMS = [
-  {
-    num: '01',
-    titleId: 'Move & Dance',
-    subtitleId: 'Early Childhood Dance Class',
-    titleEn: 'Move & Dance',
-    subtitleEn: 'Early Childhood Dance Class',
-    descId: 'Kelas untuk anak usia PAUD hingga TK yang mengenalkan gerakan dasar menari melalui permainan, musik, dan aktivitas menyenangkan untuk mengembangkan koordinasi tubuh dan motorik.',
-    descEn: 'Designed for preschool and kindergarten children, introducing basic dance movements through games, music, and enjoyable activities to develop coordination and confidence.',
-    ageId: 'PAUD – TK',
-    ageEn: 'Preschool – Kindergarten',
-    emoji: '🌟',
-  },
-  {
-    num: '02',
-    titleId: 'Modern Dance Class',
-    subtitleId: '',
-    titleEn: 'Modern Dance Class',
-    subtitleEn: '',
-    descId: 'Kelas untuk anak usia SD yang mempelajari teknik dasar modern dance (hip-hop, K-pop) untuk mengembangkan koordinasi, musikalitas, kreativitas, dan kepercayaan diri melalui gerakan.',
-    descEn: 'Designed for elementary school children, introducing foundational modern dance techniques to develop coordination, musicality, creativity, and confidence through movement.',
-    ageId: 'SD (7–12 tahun)',
-    ageEn: 'Elementary (Age 7–12)',
-    emoji: '💃',
-  },
-  {
-    num: '03',
-    titleId: 'K-Pop Dance Class',
-    subtitleId: '',
-    titleEn: 'K-Pop Dance Class',
-    subtitleEn: '',
-    descId: 'Kelas untuk anak usia SMP hingga SMA yang ingin mendalami K-pop dance, koreografi, ketepatan gerakan, ekspresi, dan kekompakan tim.',
-    descEn: 'Designed for junior and senior high school students to explore K-pop dance, choreography, movement precision, stage expression, and group synchronization.',
-    ageId: 'SMP – SMA (13–18 tahun)',
-    ageEn: 'Junior–Senior High (Age 13–18)',
-    emoji: '🎤',
-  },
-  {
-    num: '04',
-    titleId: 'Kelas Tari Tradisional Bali',
-    subtitleId: '',
-    titleEn: 'Balinese Traditional Dance Class',
-    subtitleEn: '',
-    descId: 'Kelas untuk anak usia SD yang ingin mengenal dan mempelajari teknik dasar, sikap tubuh, ekspresi, serta gerakan seni tari tradisional Bali.',
-    descEn: 'Designed for elementary school children interested in learning fundamental techniques, posture, expression, and movements of traditional Balinese dance.',
-    ageId: 'SD (7–12 tahun)',
-    ageEn: 'Elementary (Age 7–12)',
-    emoji: '🪷',
-  },
-  {
-    num: '05',
-    titleId: 'Kelas Menari dengan Hati',
-    subtitleId: 'Inclusive Class',
-    titleEn: 'Dancing with Heart',
-    subtitleEn: 'Inclusive Class',
-    descId: 'Kelas tari Bali inklusif yang dirancang khusus untuk anak dengan hambatan pendengaran dalam lingkungan yang suportif dan memperhatikan kebutuhan komunikasi anak.',
-    descEn: 'An inclusive Balinese dance class specially designed for children who are deaf or hard of hearing in a supportive, accommodating, and inclusive environment.',
-    ageId: 'SD (anak dengan hambatan pendengaran)',
-    ageEn: 'Elementary (Children with hearing impairment)',
-    emoji: '💛',
-  },
-];
-
 // ===== HIGHLIGHTS DATA =====
 const HIGHLIGHTS = [
   {
-    num: '01',
     titleId: 'Joyful Learning',
     titleEn: 'Joyful Learning',
     descId: 'Kami menghadirkan proses belajar menari yang menyenangkan, interaktif, dan sesuai dengan tahap perkembangan anak, sehingga mereka dapat belajar sambil bermain dan bereksplorasi.',
-    descEn: 'We make learning to dance fun, interactive, and appropriate for each child\'s developmental stage, allowing them to learn, play, and explore through movement.',
+    descEn: "We make learning to dance fun, interactive, and appropriate for each child's developmental stage, allowing them to learn, play, and explore through movement.",
   },
   {
-    num: '02',
     titleId: 'Fokus Kelas Kecil',
     titleEn: 'Small Class Focus',
     descId: 'Dengan maksimal 15 anak per kelas, pengajar dapat memberikan perhatian yang lebih personal dan mendukung perkembangan setiap anak sesuai dengan kemampuan serta kebutuhannya.',
-    descEn: 'With a maximum of 15 students per class, our instructors can provide more personalized attention and support each child\'s progress according to their individual abilities and needs.',
+    descEn: "With a maximum of 15 students per class, our instructors can provide more personalized attention and support each child's progress according to their individual abilities and needs.",
   },
   {
-    num: '03',
     titleId: 'Pengajar Ramah Anak',
     titleEn: 'Child-Friendly Instructors',
     descId: 'Pengajar kami menciptakan lingkungan belajar yang ramah, suportif, dan bebas dari rasa takut untuk mencoba, sehingga anak merasa aman untuk belajar dan berkembang.',
@@ -126,65 +63,57 @@ const HIGHLIGHTS = [
   },
 ];
 
+// ===== SERVICES DATA =====
+const SERVICES = [
+  {
+    titleId: 'Move & Dance – Early Childhood Dance Class',
+    titleEn: 'Move & Dance – Early Childhood Dance Class',
+    descId: 'Kelas untuk anak usia PAUD hingga TK yang mengenalkan gerakan dasar menari melalui permainan, musik, dan aktivitas menyenangkan untuk mengembangkan koordinasi tubuh dan motorik.',
+    descEn: 'Designed for preschool and kindergarten children, introducing basic dance movements through games, music, and enjoyable activities to develop coordination and confidence.',
+  },
+  {
+    titleId: 'Modern Dance Class',
+    titleEn: 'Modern Dance Class',
+    descId: 'Kelas untuk anak usia SD yang mempelajari teknik dasar modern dance (hip-hop, K-pop) untuk mengembangkan koordinasi, musikalitas, dan kreativitas melalui gerakan.',
+    descEn: 'Designed for elementary school children, introducing foundational modern dance techniques to develop coordination, musicality, creativity, and confidence through movement.',
+  },
+  {
+    titleId: 'K-Pop Dance Class',
+    titleEn: 'K-Pop Dance Class',
+    descId: 'Kelas untuk anak usia SMP hingga SMA yang ingin mendalami K-pop dance, koreografi, ketepatan gerakan, ekspresi, dan kekompakan tim.',
+    descEn: 'Designed for junior and senior high school students to explore K-pop dance, choreography, movement precision, stage expression, and group synchronization.',
+  },
+  {
+    titleId: 'Kelas Tari Tradisional Bali',
+    titleEn: 'Balinese Traditional Dance Class',
+    descId: 'Kelas untuk anak usia SD yang ingin mengenal dan mempelajari teknik dasar, sikap tubuh, ekspresi, serta gerakan seni tari tradisional Bali.',
+    descEn: 'Designed for elementary school children interested in learning fundamental techniques, posture, expression, and movements of traditional Balinese dance.',
+  },
+  {
+    titleId: 'Kelas Menari dengan Hati',
+    titleEn: 'Dancing with Heart – Inclusive Class',
+    descId: 'Kelas tari Bali inklusif yang dirancang khusus untuk anak dengan hambatan pendengaran dalam lingkungan yang suportif dan memperhatikan kebutuhan komunikasi anak.',
+    descEn: 'An inclusive Balinese dance class specially designed for children who are deaf or hard of hearing in a supportive, accommodating, and inclusive environment.',
+  },
+];
+
 // ===== NAV LINKS =====
 const NAV_LINKS = [
   { id: 'about', labelId: 'Tentang Kami', labelEn: 'About' },
   { id: 'highlights', labelId: 'Keunggulan', labelEn: 'Why Us' },
-  { id: 'programs', labelId: 'Program Kelas', labelEn: 'Classes' },
+  { id: 'services', labelId: 'Layanan', labelEn: 'Services' },
   { id: 'gallery', labelId: 'Galeri', labelEn: 'Gallery' },
   { id: 'contact', labelId: 'Kontak', labelEn: 'Contact' },
 ];
 
-// ===== SCROLL REVEAL HOOK =====
-function useScrollReveal() {
-  useEffect(() => {
-    const els = document.querySelectorAll<HTMLElement>('.reveal');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('visible');
-          }
-        });
-      },
-      { threshold: 0.1 }
-    );
-    els.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-}
-
-// ===== MAIN PAGE COMPONENT =====
+// ===== MAIN PAGE =====
 export default function HomePage() {
   const [lang, setLang] = useState<'id' | 'en'>('id');
   const [menuOpen, setMenuOpen] = useState(false);
-  const [lightbox, setLightbox] = useState<typeof GALLERY_PHOTOS[0] | null>(null);
-  const [galleryPage, setGalleryPage] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const [lightboxPhoto, setLightboxPhoto] = useState<typeof GALLERY_PHOTOS[0] | null>(null);
 
   const isId = lang === 'id';
-  const GALLERY_PER_PAGE = 6;
-  const totalGalleryPages = Math.ceil(GALLERY_PHOTOS.length / GALLERY_PER_PAGE);
-  const currentPhotos = GALLERY_PHOTOS.slice(
-    galleryPage * GALLERY_PER_PAGE,
-    (galleryPage + 1) * GALLERY_PER_PAGE
-  );
-
-  useScrollReveal();
-
-  // Navbar scroll effect
-  useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 40);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Lightbox escape
-  useEffect(() => {
-    const handle = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightbox(null); };
-    window.addEventListener('keydown', handle);
-    return () => window.removeEventListener('keydown', handle);
-  }, []);
 
   // Load lang from localStorage
   useEffect(() => {
@@ -192,10 +121,29 @@ export default function HomePage() {
     if (saved === 'id' || saved === 'en') setLang(saved);
   }, []);
 
-  const toggleLang = () => {
-    const next = lang === 'id' ? 'en' : 'id';
-    setLang(next);
-    localStorage.setItem('bma_lang', next);
+  // Navbar scroll
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Lock body scroll when mobile menu open
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [menuOpen]);
+
+  // Lightbox escape
+  useEffect(() => {
+    const handle = (e: KeyboardEvent) => { if (e.key === 'Escape') setLightboxPhoto(null); };
+    window.addEventListener('keydown', handle);
+    return () => window.removeEventListener('keydown', handle);
+  }, []);
+
+  const toggleLang = (l: 'id' | 'en') => {
+    setLang(l);
+    localStorage.setItem('bma_lang', l);
   };
 
   const scrollTo = (id: string) => {
@@ -205,203 +153,192 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#FAFAFA]">
+    <main>
 
-      {/* ===== NAVBAR ===== */}
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-sm shadow-sm border-b border-gray-100' : 'bg-transparent'}`}>
-        <div className="max-w-[1440px] mx-auto px-6 sm:px-8 h-[72px] flex items-center justify-between gap-8">
+      {/* ===== NAVBAR (WHG-style) ===== */}
+      <nav className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/98 backdrop-blur-md border-b border-gray-200/80 shadow-xs'
+          : 'bg-white/95 backdrop-blur-md border-b border-gray-100'
+      }`}>
+        <div className="max-w-[1440px] mx-auto px-6 sm:px-8 h-[80px] flex items-center justify-between">
+
           {/* Logo */}
-          <button onClick={() => scrollTo('hero')} className="flex items-center gap-3 cursor-pointer">
-            <div className="w-9 h-9 relative flex-shrink-0">
-              <Image src="/images/logo.png" alt="Bali Menari Academy" fill sizes="36px" className="object-contain" />
+          <button
+            onClick={() => scrollTo('hero')}
+            className="transition-opacity duration-300 hover:opacity-75 cursor-pointer py-2 flex items-center gap-3"
+            aria-label="Bali Menari Academy - Beranda"
+          >
+            <div className="w-8 h-8 relative flex-shrink-0">
+              <Image src="/images/logo.png" alt="Bali Menari Academy" fill sizes="32px" className="object-contain" priority />
             </div>
-            <span className="font-serif text-[17px] text-gray-900 hidden sm:block leading-tight">
+            <span className="hidden sm:block text-[15px] font-medium text-gray-900 tracking-[-0.01em]">
               Bali Menari Academy
             </span>
           </button>
 
           {/* Desktop nav */}
-          <div className="hidden lg:flex items-center gap-7">
+          <div className="hidden md:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <button
                 key={link.id}
                 onClick={() => scrollTo(link.id)}
-                className="text-sm text-gray-500 hover:text-gray-900 transition-colors cursor-pointer font-sans font-medium"
+                className="text-[13px] font-medium text-gray-600 hover:text-gray-950 transition-colors duration-300 tracking-[0.05em] relative group cursor-pointer"
               >
                 {isId ? link.labelId : link.labelEn}
+                <span className="absolute -bottom-1 left-0 w-0 h-[1.5px] bg-gray-900 transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
 
-          {/* Right actions */}
-          <div className="flex items-center gap-3">
-            {/* Lang toggle */}
+          {/* Right side */}
+          <div className="flex items-center gap-3 sm:gap-5">
+            {/* Lang toggle pill */}
+            <div className="flex items-center bg-gray-100 p-0.5 rounded-full border border-gray-200">
+              <button
+                onClick={() => toggleLang('id')}
+                className={`min-w-[38px] h-8 text-[11px] font-semibold tracking-wider rounded-full transition-all duration-200 flex items-center justify-center cursor-pointer ${
+                  lang === 'id' ? 'bg-gray-950 text-white shadow-xs' : 'text-gray-500 hover:text-gray-900'
+                }`}
+                aria-label="Pilih Bahasa Indonesia"
+              >
+                ID
+              </button>
+              <button
+                onClick={() => toggleLang('en')}
+                className={`min-w-[38px] h-8 text-[11px] font-semibold tracking-wider rounded-full transition-all duration-200 flex items-center justify-center cursor-pointer ${
+                  lang === 'en' ? 'bg-gray-950 text-white shadow-xs' : 'text-gray-500 hover:text-gray-900'
+                }`}
+                aria-label="Select English language"
+              >
+                EN
+              </button>
+            </div>
+
+            {/* Mobile hamburger */}
             <button
-              onClick={toggleLang}
-              className="text-xs font-medium tracking-widest uppercase px-3 py-1.5 border border-gray-300 text-gray-600 hover:border-gray-900 hover:text-gray-900 transition-colors cursor-pointer"
-            >
-              {lang === 'id' ? 'EN' : 'ID'}
-            </button>
-            {/* WA CTA */}
-            <a
-              href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex px-5 py-2 bg-gray-900 text-white text-xs tracking-widest uppercase hover:bg-gray-700 transition-colors"
-            >
-              {isId ? 'Daftar Kelas' : 'Enroll Now'}
-            </a>
-            {/* Mobile menu button */}
-            <button
+              aria-label={isId ? 'Buka menu navigasi' : 'Open navigation menu'}
+              aria-expanded={menuOpen}
+              className="md:hidden flex flex-col justify-center items-center gap-[5px] w-11 h-11 rounded-lg hover:bg-gray-100 transition-colors cursor-pointer"
               onClick={() => setMenuOpen(!menuOpen)}
-              className="lg:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5 cursor-pointer"
-              aria-label="Toggle menu"
             >
-              <span className={`block w-5 h-px bg-gray-900 transition-all ${menuOpen ? 'rotate-45 translate-y-[3px]' : ''}`} />
-              <span className={`block w-5 h-px bg-gray-900 transition-all ${menuOpen ? '-rotate-45 -translate-y-[3px]' : ''}`} />
+              <span className={`block w-6 h-[2px] bg-gray-900 transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-[7px]' : ''}`} />
+              <span className={`block w-6 h-[2px] bg-gray-900 transition-all duration-300 ${menuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+              <span className={`block w-6 h-[2px] bg-gray-900 transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-[7px]' : ''}`} />
             </button>
           </div>
         </div>
 
-        {/* Mobile menu */}
-        {menuOpen && (
-          <div className="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-sm">
-            <div className="px-6 py-4 flex flex-col gap-1">
-              {NAV_LINKS.map((link) => (
-                <button
-                  key={link.id}
-                  onClick={() => scrollTo(link.id)}
-                  className="text-left py-3 text-sm text-gray-700 hover:text-gray-900 border-b border-gray-100 last:border-0 font-sans cursor-pointer"
-                >
-                  {isId ? link.labelId : link.labelEn}
-                </button>
-              ))}
+        {/* Mobile drawer */}
+        <div className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          menuOpen ? 'max-h-[500px] border-t border-gray-200 shadow-xl' : 'max-h-0'
+        }`}>
+          <div className="bg-white px-6 py-6 flex flex-col gap-1">
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.id}
+                onClick={() => scrollTo(link.id)}
+                className="text-base font-medium text-gray-800 hover:text-black py-3.5 border-b border-gray-100 text-left transition-colors flex items-center justify-between cursor-pointer"
+              >
+                <span>{isId ? link.labelId : link.labelEn}</span>
+                <span className="text-gray-400 text-sm">→</span>
+              </button>
+            ))}
+            <div className="pt-4 mt-2">
               <a
-                href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`}
+                href={`https://wa.me/${WA_NUMBER}?text=${isId ? WA_MESSAGE_ID : WA_MESSAGE_EN}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-3 px-5 py-3 bg-gray-900 text-white text-xs tracking-widest uppercase text-center"
+                onClick={() => setMenuOpen(false)}
+                className="w-full py-3.5 bg-gray-900 hover:bg-black text-white text-xs font-semibold tracking-widest uppercase rounded-sm flex items-center justify-center gap-2 shadow-xs"
               >
-                {isId ? 'Daftar Kelas' : 'Enroll Now'}
+                <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>{isId ? 'Konsultasi WhatsApp' : 'WhatsApp Inquiry'}</span>
               </a>
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
-      {/* ===== HERO SECTION ===== */}
-      <section id="hero" className="w-full min-h-screen flex flex-col justify-center bg-[#FAFAFA] pt-28 pb-20 px-6 sm:px-8">
-        <div className="max-w-[1440px] mx-auto w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-            {/* Text */}
-            <div className="lg:col-span-7 flex flex-col gap-8">
-              {/* Eyebrow */}
-              <div className="reveal flex items-center gap-4">
-                <p className="text-xs tracking-[0.25em] text-gray-400 uppercase font-sans">
-                  {isId ? 'Bagian dari' : 'Part of'}
-                </p>
-                <a
-                  href={WHG_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs tracking-[0.15em] text-gray-500 hover:text-gray-900 transition-colors font-sans uppercase"
-                >
-                  Warma Heritage Group
-                </a>
-              </div>
-
-              <h1 className="reveal reveal-delay-1 font-serif font-normal text-5xl sm:text-6xl lg:text-[72px] leading-[1.05] text-gray-900">
-                {isId ? (
-                  <>Growing<br /><span className="text-gray-400">Confidence</span><br />Through Movement.</>
-                ) : (
-                  <>Growing<br /><span className="text-gray-400">Confidence</span><br />Through Movement.</>
-                )}
+      {/* ===== 1. HERO ===== */}
+      <section id="hero" className="w-full bg-gray-50 pt-28 sm:pt-36 pb-16 sm:pb-24 px-6 sm:px-8">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 items-center">
+            <div className="flex flex-col gap-6">
+              <p className="text-xs tracking-[0.2em] text-gray-400 uppercase">Performing Arts & Dance School</p>
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                Bali Menari Academy
               </h1>
-
-              <p className="reveal reveal-delay-2 text-lg sm:text-xl text-gray-500 leading-[1.7] max-w-[540px] font-sans">
+              <p className="text-lg text-gray-500 leading-relaxed">
                 {isId
-                  ? 'Tempat les tari anak dengan pilihan kelas tari tradisional Bali dan modern dance, dalam lingkungan belajar yang menyenangkan dan inklusif.'
-                  : 'A dance school for children offering traditional Balinese dance and modern dance classes, in a fun, inclusive, and supportive learning environment.'}
+                  ? 'Tempat les tari anak dengan pilihan kelas tari tradisional dan modern dance, yang menumbuhkan kepercayaan diri melalui gerakan.'
+                  : 'A dance school for children offering traditional Balinese dance and modern dance classes, growing confidence through movement.'}
               </p>
-
-              <div className="reveal reveal-delay-3 flex flex-col sm:flex-row items-start gap-4">
-                <a
-                  href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-10 py-4 bg-gray-900 text-white text-sm tracking-widest uppercase hover:bg-gray-700 transition-colors duration-300"
-                >
-                  {isId ? 'Daftar Kelas Sekarang' : 'Enroll Now'}
-                </a>
-                <button
-                  onClick={() => scrollTo('programs')}
-                  className="px-10 py-4 border border-gray-300 text-gray-700 text-sm tracking-widest uppercase hover:border-gray-900 hover:text-gray-900 transition-colors cursor-pointer"
-                >
-                  {isId ? 'Lihat Program' : 'View Programs'}
-                </button>
-              </div>
-
-              {/* Stats row */}
-              <div className="reveal reveal-delay-4 pt-8 border-t border-gray-200 grid grid-cols-3 gap-6">
-                {[
-                  { num: '5', labelId: 'Program Kelas', labelEn: 'Class Programs' },
-                  { num: '≤15', labelId: 'Murid per Kelas', labelEn: 'Students/Class' },
-                  { num: 'PAUD–SMA', labelId: 'Rentang Usia', labelEn: 'Age Range' },
-                ].map((s, i) => (
-                  <div key={i} className="flex flex-col gap-1">
-                    <span className="font-serif text-2xl text-gray-900">{s.num}</span>
-                    <span className="text-xs text-gray-400 font-sans tracking-wide">
-                      {isId ? s.labelId : s.labelEn}
-                    </span>
-                  </div>
-                ))}
-              </div>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${isId ? WA_MESSAGE_ID : WA_MESSAGE_EN}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit px-8 py-4 bg-gray-900 text-white text-sm tracking-widest uppercase hover:bg-gray-700 transition-colors duration-300"
+              >
+                {isId ? 'Hubungi Kami' : 'Contact Us'}
+              </a>
             </div>
-
-            {/* Hero image grid */}
-            <div className="lg:col-span-5 grid grid-cols-2 gap-4">
-              <div className="aspect-[3/4] bg-gray-200 relative overflow-hidden">
-                <Image
-                  src="/images/gallery/frame-58.webp"
-                  alt="Bali Menari Academy students"
-                  fill
-                  sizes="(max-width: 1024px) 50vw, 25vw"
-                  className="object-cover"
-                  priority
-                />
-              </div>
-              <div className="flex flex-col gap-4">
-                <div className="aspect-square bg-gray-200 relative overflow-hidden">
-                  <Image
-                    src="/images/gallery/frame-79.webp"
-                    alt="Bali Menari Academy dance pose"
-                    fill
-                    sizes="(max-width: 1024px) 50vw, 20vw"
-                    className="object-cover"
-                    priority
-                  />
-                </div>
-                <div className="aspect-square bg-gray-200 relative overflow-hidden">
-                  <Image
-                    src="/images/gallery/frame-78.webp"
-                    alt="Bali Menari Academy studio"
-                    fill
-                    sizes="(max-width: 1024px) 50vw, 20vw"
-                    className="object-cover"
-                  />
-                </div>
-              </div>
+            <div className="w-full aspect-square bg-gray-200 relative overflow-hidden">
+              <Image
+                src="/images/gallery/frame-58.webp"
+                alt="Bali Menari Academy"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="object-cover"
+                priority
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== ABOUT SECTION ===== */}
+      {/* ===== 2. TENTANG PERUSAHAAN ===== */}
       <section id="about" className="w-full bg-white py-24 sm:py-32 px-6 sm:px-8">
         <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-x-20 gap-y-14 items-start">
-          {/* Image */}
-          <div className="lg:col-span-5 relative">
-            <div className="aspect-[4/5] bg-gray-200 relative overflow-hidden">
+          <div className="lg:col-span-6">
+            <p className="flex items-center gap-5 text-xs tracking-[0.2em] text-gray-500 uppercase">
+              <span>{isId ? 'Tentang Perusahaan' : 'About'}</span>
+              <span className="h-px w-16 bg-gray-300" aria-hidden="true" />
+            </p>
+            <h2 className="mt-7 text-4xl lg:text-[44px] font-bold tracking-tight leading-[1.1] text-gray-900">
+              Bali Menari Academy
+            </h2>
+            <p className="mt-7 max-w-[560px] text-xl sm:text-[22px] leading-[1.55] text-gray-900">
+              {isId
+                ? 'Bali Menari Academy adalah tempat les tari untuk anak usia PAUD hingga SMA yang menghadirkan kelas tari tradisional Bali dan modern dance dalam lingkungan belajar yang menyenangkan, inklusif, dan mendukung perkembangan anak.'
+                : 'Bali Menari Academy is a dance school for children from preschool through senior high school, offering traditional Balinese dance and modern dance classes in a fun, inclusive, and supportive learning environment.'}
+            </p>
+            <p className="mt-8 max-w-[560px] text-lg leading-[1.85] text-gray-700">
+              {isId
+                ? 'Melalui pendekatan joyful learning, pengajar yang ramah anak, serta kelas berkapasitas maksimal 15 peserta, kami membantu anak merasa nyaman untuk mencoba, berekspresi, dan menikmati setiap proses belajar menari.'
+                : 'Through our joyful learning approach, child-friendly instructors, and small classes of up to 15 students, we help children feel comfortable exploring movement, expressing themselves, and enjoying every step of their dance journey.'}
+            </p>
+            <p className="mt-5 max-w-[560px] text-lg leading-[1.85] text-gray-700">
+              {isId
+                ? 'Bagi kami, menari bukan hanya tentang menguasai gerakan, tetapi juga tentang membangun rasa percaya diri, keberanian tampil, kemampuan bersosialisasi, dan kebebasan mengekspresikan diri. Dengan tim yang multikultural dan lingkungan yang terbuka bagi anak dari berbagai latar belakang, Bali Menari Academy percaya bahwa setiap anak memiliki potensi untuk berkembang melalui gerakan.'
+                : "For us, dance is about more than mastering movements. It is also a way to build confidence, develop stage presence, encourage self-expression, and strengthen social skills. With a multicultural team and an inclusive environment that welcomes children from all backgrounds, Bali Menari Academy believes every child has the potential to grow through movement."}
+            </p>
+            <div className="mt-14 max-w-[560px] border-t border-gray-200 pt-5 flex items-baseline justify-between">
+              <span className="text-xs tracking-[0.2em] text-gray-500 uppercase">{isId ? 'Bagian dari' : 'Part of'}</span>
+              <a
+                href={WHG_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-[17px] text-gray-900 hover:text-gray-600 transition-colors"
+              >
+                Warma Heritage Group
+              </a>
+            </div>
+          </div>
+          <div className="w-full max-w-lg lg:max-w-none lg:col-start-8 lg:col-span-5 lg:pt-16">
+            <div className="relative w-full aspect-[4/5] bg-gray-200 overflow-hidden">
               <Image
                 src="/images/gallery/frame-80.webp"
                 alt="Bali Menari Academy dancer"
@@ -410,73 +347,29 @@ export default function HomePage() {
                 className="object-cover"
               />
             </div>
-            {/* Floating accent */}
-            <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-gray-100 border border-gray-200 flex flex-col items-center justify-center gap-1 hidden lg:flex">
-              <span className="font-serif text-3xl text-gray-900">🩰</span>
-              <span className="text-xs tracking-[0.15em] text-gray-500 uppercase font-sans text-center px-2">
-                {isId ? 'Tari Bali & Modern' : 'Balinese & Modern'}
-              </span>
-            </div>
-          </div>
-
-          {/* Text */}
-          <div className="lg:col-span-7 lg:col-start-6">
-            <p className="reveal flex items-center gap-5 text-xs tracking-[0.2em] text-gray-500 uppercase font-sans">
-              <span>{isId ? 'Tentang Kami' : 'About Us'}</span>
-              <span className="h-px w-16 bg-gray-300" aria-hidden="true" />
-            </p>
-            <h2 className="reveal reveal-delay-1 mt-7 text-4xl lg:text-[44px] font-serif font-normal tracking-tight leading-[1.1] text-gray-900">
-              Bali Menari Academy
-            </h2>
-            <p className="reveal reveal-delay-2 mt-7 max-w-[600px] text-xl sm:text-[22px] leading-[1.55] text-gray-900 font-sans">
-              {isId
-                ? 'Bali Menari Academy adalah tempat les tari untuk anak usia PAUD hingga SMA yang menghadirkan pilihan kelas tari tradisional Bali dan modern dance.'
-                : 'Bali Menari Academy is a dance school for children from preschool through senior high school, offering traditional Balinese dance and modern dance classes.'}
-            </p>
-            <p className="reveal reveal-delay-2 mt-6 max-w-[600px] text-base leading-[1.85] text-gray-600 font-sans">
-              {isId
-                ? 'Melalui pendekatan joyful learning, pengajar yang ramah anak, serta kelas berkapasitas maksimal 15 peserta, kami membantu anak merasa nyaman untuk mencoba, berekspresi, dan menikmati setiap proses belajar menari.'
-                : 'Through our joyful learning approach, child-friendly instructors, and small classes of up to 15 students, we help children feel comfortable exploring movement, expressing themselves, and enjoying every step of their dance journey.'}
-            </p>
-            <p className="reveal reveal-delay-3 mt-5 max-w-[600px] text-base leading-[1.85] text-gray-600 font-sans">
-              {isId
-                ? 'Bagi kami, menari bukan hanya tentang menguasai gerakan, tetapi juga tentang membangun rasa percaya diri, keberanian tampil, kemampuan bersosialisasi, dan kebebasan mengekspresikan diri. Dengan tim yang multikultural dan lingkungan yang terbuka bagi anak dari berbagai latar belakang, kami percaya bahwa setiap anak memiliki potensi untuk berkembang melalui gerakan.'
-                : 'For us, dance is about more than mastering movements. It is also a way to build confidence, develop stage presence, encourage self-expression, and strengthen social skills. With a multicultural team and an inclusive environment that welcomes children from all backgrounds, we believe every child has the potential to grow through movement.'}
-            </p>
-            <div className="reveal reveal-delay-4 mt-12 max-w-[600px] border-t border-gray-200 pt-5 flex items-baseline justify-between">
-              <span className="text-xs tracking-[0.2em] text-gray-500 uppercase font-sans">{isId ? 'Bagian dari' : 'Part of'}</span>
-              <a
-                href={WHG_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[17px] text-gray-900 hover:text-gray-600 transition-colors font-sans"
-              >
-                Warma Heritage Group
-              </a>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ===== HIGHLIGHTS SECTION ===== */}
-      <section id="highlights" className="w-full bg-[#FAFAFA] py-24 px-6 sm:px-8">
+      {/* ===== 3. KEUNGGULAN KAMI ===== */}
+      <section id="highlights" className="w-full bg-gray-50 py-24 px-8">
         <div className="max-w-[1440px] mx-auto">
-          <div className="mb-16 reveal">
-            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3 font-sans">
+          <div className="mb-16">
+            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">
               {isId ? 'Keunggulan Kami' : 'Why Choose Us'}
             </p>
-            <h2 className="text-3xl font-serif font-normal text-gray-900">
+            <h2 className="text-3xl font-bold text-gray-900">
               {isId ? 'Mengapa Memilih Kami' : 'Our Key Strengths'}
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {HIGHLIGHTS.map((h, i) => (
-              <div key={i} className={`reveal reveal-delay-${i + 1} flex flex-col gap-4 p-8 bg-white border border-gray-100`}>
-                <span className="text-2xl font-serif text-gray-900">{h.num}</span>
-                <h3 className="text-lg font-sans font-semibold text-gray-900">
+              <div key={i} className="flex flex-col gap-4 p-8 bg-white border border-gray-100">
+                <span className="text-2xl font-bold text-gray-900">0{i + 1}</span>
+                <h3 className="text-lg font-bold text-gray-900">
                   {isId ? h.titleId : h.titleEn}
                 </h3>
-                <p className="text-sm text-gray-500 leading-relaxed font-sans">
+                <p className="text-sm text-gray-500 leading-relaxed">
                   {isId ? h.descId : h.descEn}
                 </p>
               </div>
@@ -485,294 +378,201 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== PROGRAMS SECTION ===== */}
-      <section id="programs" className="w-full bg-white py-24 sm:py-32 px-6 sm:px-8">
+      {/* ===== 4. APA YANG KAMI TAWARKAN ===== */}
+      <section id="services" className="w-full bg-white py-24 px-8">
         <div className="max-w-[1440px] mx-auto">
-          <div className="mb-16 reveal">
-            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3 font-sans">
-              {isId ? 'Program Kelas' : 'Class Programs'}
+          <div className="mb-16">
+            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">
+              {isId ? 'Layanan Kami' : 'Services'}
             </p>
-            <h2 className="text-3xl font-serif font-normal text-gray-900">
-              {isId ? 'Kelas dan Program Kami' : 'Our Classes & Programs'}
+            <h2 className="text-3xl font-bold text-gray-900">
+              {isId ? 'Apa yang Kami Tawarkan' : 'What We Offer'}
             </h2>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {PROGRAMS.map((p, i) => (
-              <div
-                key={i}
-                className={`reveal reveal-delay-${Math.min(i + 1, 4)} flex gap-6 items-start p-8 bg-gray-50 border border-gray-100 hover:border-gray-300 transition-colors`}
-              >
-                <div className="flex-shrink-0 flex flex-col items-center gap-2">
-                  <span className="text-2xl">{p.emoji}</span>
-                  <span className="text-xs text-gray-400 tracking-widest font-sans">{p.num}</span>
-                </div>
-                <div className="flex flex-col gap-3">
-                  <div>
-                    <h3 className="text-base font-sans font-bold text-gray-900">
-                      {isId ? p.titleId : p.titleEn}
-                    </h3>
-                    {(isId ? p.subtitleId : p.subtitleEn) && (
-                      <p className="text-xs text-gray-400 font-sans mt-0.5">
-                        {isId ? p.subtitleId : p.subtitleEn}
-                      </p>
-                    )}
-                  </div>
-                  <p className="text-sm text-gray-500 leading-relaxed font-sans">
-                    {isId ? p.descId : p.descEn}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {SERVICES.map((s, i) => (
+              <div key={i} className="flex gap-6 items-start p-8 bg-gray-50">
+                <span className="text-xs text-gray-400 tracking-widest mt-1">0{i + 1}</span>
+                <div className="flex flex-col gap-2">
+                  <h3 className="text-base font-bold text-gray-900">
+                    {isId ? s.titleId : s.titleEn}
+                  </h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    {isId ? s.descId : s.descEn}
                   </p>
-                  <div className="flex items-center gap-2 pt-1">
-                    <span className="text-xs tracking-[0.12em] text-gray-400 uppercase font-sans">{isId ? 'Usia' : 'Age'}</span>
-                    <span className="text-xs font-medium text-gray-600 font-sans">
-                      {isId ? p.ageId : p.ageEn}
-                    </span>
-                  </div>
                 </div>
               </div>
             ))}
           </div>
-
-          <div className="reveal mt-12 flex justify-center">
-            <a
-              href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-12 py-4 bg-gray-900 text-white text-sm tracking-widest uppercase hover:bg-gray-700 transition-colors duration-300"
-            >
-              {isId ? 'Konsultasi via WhatsApp' : 'Consult via WhatsApp'}
-            </a>
-          </div>
         </div>
       </section>
 
-      {/* ===== GALLERY SECTION ===== */}
-      <section id="gallery" className="w-full bg-[#FAFAFA] py-24 sm:py-32 px-6 sm:px-8">
+      {/* ===== 5. GALERI (horizontal scroll, WHG-style) ===== */}
+      <section id="gallery" className="w-full bg-gray-50 py-24 px-8">
         <div className="max-w-[1440px] mx-auto">
-          {/* Section header */}
-          <div className="mb-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-end">
-            <div className="lg:col-span-7 reveal">
-              <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3 font-sans">
-                {isId ? 'Galeri' : 'Gallery'}
-              </p>
-              <h2 className="text-3xl sm:text-4xl font-serif font-normal text-gray-900">
-                {isId ? 'Dokumentasi Kelas' : 'Class Documentation'}
-              </h2>
-            </div>
-            <div className="lg:col-span-5 reveal reveal-delay-1">
-              <p className="text-sm text-gray-500 leading-relaxed font-sans max-w-sm">
-                {isId
-                  ? 'Momen-momen kegiatan belajar mengajar, latihan, dan penampilan para siswa Bali Menari Academy.'
-                  : 'Moments of learning activities, practice sessions, and performances by Bali Menari Academy students.'}
-              </p>
-            </div>
+          <div className="mb-16">
+            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">
+              {isId ? 'Dokumentasi' : 'Documentation'}
+            </p>
+            <h2 className="text-3xl font-bold text-gray-900">
+              {isId ? 'Dokumentasi Kami' : 'Our Documentation'}
+            </h2>
           </div>
-
-          {/* Grid 3x2 */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {currentPhotos.map((photo, idx) => (
+          {/* Horizontal scroll galeri */}
+          <div
+            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {GALLERY_PHOTOS.map((photo, i) => (
               <div
                 key={photo.id}
-                onClick={() => setLightbox(photo)}
-                className={`reveal reveal-delay-${Math.min(idx + 1, 4)} group cursor-pointer aspect-square bg-gray-200 relative overflow-hidden`}
+                onClick={() => setLightboxPhoto(photo)}
+                className="flex-shrink-0 snap-start w-72 sm:w-80 aspect-square bg-gray-200 relative overflow-hidden rounded-xs group shadow-xs hover:shadow-md transition-shadow cursor-pointer"
               >
                 <Image
                   src={photo.src}
                   alt={isId ? photo.titleId : photo.titleEn}
                   fill
                   unoptimized
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  sizes="(max-width: 640px) 288px, 320px"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent p-5 pt-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <p className="text-xs font-medium text-white font-sans tracking-wide line-clamp-2">
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-10 text-white">
+                  <p className="text-xs font-medium tracking-wide">
                     {isId ? photo.titleId : photo.titleEn}
                   </p>
                 </div>
               </div>
             ))}
           </div>
-
-          {/* Pagination */}
-          <div className="reveal mt-12 flex items-center gap-6">
-            <span className="text-xs tracking-[0.2em] uppercase text-gray-400 font-sans whitespace-nowrap">
-              {String(GALLERY_PHOTOS.length).padStart(2, '0')} {isId ? 'Foto' : 'Photos'}
-            </span>
-            <span className="flex-1 h-px bg-gray-200 relative overflow-hidden">
-              <span
-                className="absolute left-0 top-0 h-px bg-gray-900 transition-all duration-300"
-                style={{ width: `${((galleryPage + 1) / totalGalleryPages) * 100}%` }}
-              />
-            </span>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setGalleryPage((p) => Math.max(0, p - 1))}
-                disabled={galleryPage === 0}
-                aria-label={isId ? 'Sebelumnya' : 'Previous'}
-                className="w-12 h-12 rounded-full border border-gray-300 text-gray-900 text-lg flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-gray-900 transition-colors"
-              >
-                ←
-              </button>
-              <button
-                onClick={() => setGalleryPage((p) => Math.min(totalGalleryPages - 1, p + 1))}
-                disabled={galleryPage >= totalGalleryPages - 1}
-                aria-label={isId ? 'Berikutnya' : 'Next'}
-                className="w-12 h-12 rounded-full border border-gray-300 text-gray-900 text-lg flex items-center justify-center cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed hover:border-gray-900 transition-colors"
-              >
-                →
-              </button>
-            </div>
-          </div>
+          <p className="text-xs text-gray-400 text-right mt-4 tracking-wide">
+            {isId ? 'Geser untuk lihat lebih →' : 'Scroll to see more →'}
+          </p>
         </div>
       </section>
 
-      {/* ===== CONTACT / CTA SECTION ===== */}
-      <section id="contact" className="w-full bg-gray-900 py-24 sm:py-32 px-6 sm:px-8">
-        <div className="max-w-[1440px] mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-start">
-            {/* Left */}
-            <div className="lg:col-span-6">
-              <p className="reveal text-xs tracking-[0.2em] text-gray-400 uppercase font-sans mb-6">
-                {isId ? 'Hubungi Kami' : 'Contact Us'}
-              </p>
-              <h2 className="reveal reveal-delay-1 text-3xl sm:text-4xl font-serif font-normal text-white leading-[1.15]">
-                {isId ? 'Tertarik Mendaftarkan Anak?' : 'Interested in Enrolling?'}
-              </h2>
-              <p className="reveal reveal-delay-2 mt-6 text-base text-gray-400 leading-relaxed font-sans max-w-md">
-                {isId
-                  ? 'Hubungi kami melalui WhatsApp untuk informasi kelas, jadwal, biaya, dan pendaftaran. Kami siap menjawab pertanyaan Anda.'
-                  : 'Contact us via WhatsApp for class information, schedule, fees, and registration. We\'re ready to answer your questions.'}
-              </p>
+      {/* ===== 6. CTA ===== */}
+      <section id="contact" className="w-full bg-white py-24 px-8">
+        <div className="max-w-[1440px] mx-auto flex flex-col items-center text-center gap-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            {isId ? 'Tertarik Mendaftarkan Anak?' : 'Interested in Enrolling?'}
+          </h2>
+          <p className="text-base text-gray-500 max-w-md leading-relaxed">
+            {isId
+              ? 'Hubungi kami langsung melalui WhatsApp untuk informasi lebih lanjut tentang kelas, jadwal, dan biaya.'
+              : 'Contact us directly via WhatsApp for more information about classes, schedules, and fees.'}
+          </p>
+          <a
+            href={`https://wa.me/${WA_NUMBER}?text=${isId ? WA_MESSAGE_ID : WA_MESSAGE_EN}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="px-10 py-4 bg-gray-900 text-white text-sm tracking-widest uppercase hover:bg-gray-700 transition-colors duration-300"
+          >
+            {isId ? 'Hubungi via WhatsApp' : 'Contact via WhatsApp'}
+          </a>
+        </div>
+      </section>
 
-              <div className="reveal reveal-delay-3 mt-10 flex flex-col gap-4">
-                <a
-                  href={`https://wa.me/${WA_NUMBER}?text=${WA_MESSAGE}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-fit flex items-center gap-3 px-8 py-4 bg-white text-gray-900 text-sm tracking-widest uppercase hover:bg-gray-100 transition-colors font-sans font-medium"
-                >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" className="flex-shrink-0">
-                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-                  </svg>
-                  {isId ? 'Chat WhatsApp' : 'Chat on WhatsApp'}
-                </a>
+      {/* ===== FOOTER (WHG-style) ===== */}
+      <footer className="w-full bg-gray-100 py-16 px-6 sm:px-8">
+        <div className="max-w-[1440px] mx-auto">
+          <div className="flex flex-col md:flex-row justify-between gap-12 pb-12 border-b border-gray-300">
+            {/* Logo & deskripsi */}
+            <div className="flex flex-col gap-4 max-w-xs">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 relative flex-shrink-0">
+                  <Image src="/images/logo.png" alt="Bali Menari Academy" fill sizes="32px" className="object-contain" />
+                </div>
+                <span className="text-sm font-medium text-gray-900">Bali Menari Academy</span>
               </div>
+              <p className="text-sm text-gray-600 leading-relaxed">
+                {isId
+                  ? 'Tempat les tari anak dengan pilihan kelas tari tradisional Bali dan modern dance, dalam lingkungan belajar yang menyenangkan dan inklusif.'
+                  : 'A dance school for children offering Balinese traditional dance and modern dance classes in a fun and inclusive environment.'}
+              </p>
             </div>
 
-            {/* Right — info cards */}
-            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {[
-                {
-                  icon: '📍',
-                  labelId: 'Alamat',
-                  labelEn: 'Address',
-                  valueId: 'Jalan Sekar Tunjung XV No. 1A, Denpasar, Bali 80237',
-                  valueEn: 'Jalan Sekar Tunjung XV No. 1A, Denpasar, Bali 80237',
-                },
-                {
-                  icon: '📞',
-                  labelId: 'WhatsApp',
-                  labelEn: 'WhatsApp',
-                  valueId: '+62 812-3966-9880',
-                  valueEn: '+62 812-3966-9880',
-                },
-                {
-                  icon: '🏫',
-                  labelId: 'Holding',
-                  labelEn: 'Parent Company',
-                  valueId: 'Warma Heritage Group',
-                  valueEn: 'Warma Heritage Group',
-                  href: WHG_URL,
-                },
-                {
-                  icon: '🌐',
-                  labelId: 'Profil Lengkap',
-                  labelEn: 'Full Profile',
-                  valueId: 'warmaheritagegroup.com',
-                  valueEn: 'warmaheritagegroup.com',
-                  href: WHG_BMA_URL,
-                },
-              ].map((item, i) => (
-                <div key={i} className={`reveal reveal-delay-${i + 1} p-6 border border-gray-700 flex flex-col gap-3`}>
-                  <span className="text-xl">{item.icon}</span>
-                  <p className="text-xs tracking-[0.15em] text-gray-500 uppercase font-sans">
-                    {isId ? item.labelId : item.labelEn}
-                  </p>
-                  {item.href ? (
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-white hover:text-gray-300 transition-colors font-sans"
-                    >
-                      {isId ? item.valueId : item.valueEn}
-                    </a>
-                  ) : (
-                    <p className="text-sm text-white font-sans">
-                      {isId ? item.valueId : item.valueEn}
-                    </p>
-                  )}
-                </div>
+            {/* Nav links */}
+            <div className="flex flex-col gap-3">
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2">
+                {isId ? 'Navigasi' : 'Navigation'}
+              </p>
+              {NAV_LINKS.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => scrollTo(link.id)}
+                  className="text-sm text-gray-600 hover:text-gray-900 text-left transition-colors cursor-pointer"
+                >
+                  {isId ? link.labelId : link.labelEn}
+                </button>
               ))}
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* ===== FOOTER ===== */}
-      <footer className="w-full bg-[#0A0A0A] py-10 px-6 sm:px-8">
-        <div className="max-w-[1440px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 relative flex-shrink-0">
-              <Image src="/images/logo.png" alt="BMA" fill sizes="28px" className="object-contain" />
+            {/* Kontak */}
+            <div className="flex flex-col gap-3">
+              <p className="text-xs tracking-widest text-gray-500 uppercase mb-2">
+                {isId ? 'Kontak' : 'Contact'}
+              </p>
+              <a href={`mailto:${COMPANY_EMAIL}`} className="text-sm text-gray-600 hover:text-black transition-colors">
+                {COMPANY_EMAIL}
+              </a>
+              <a href="tel:+6281239669880" className="text-sm text-gray-600 hover:text-black transition-colors">
+                {COMPANY_PHONE}
+              </a>
+              <a
+                href="https://maps.google.com/?q=Jalan+Sekar+Tunjung+XV+No.+1A,+Denpasar,+Bali"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-sm text-gray-600 hover:text-black transition-colors"
+              >
+                {COMPANY_ADDRESS}
+              </a>
+              <a
+                href={`https://wa.me/${WA_NUMBER}?text=${isId ? WA_MESSAGE_ID : WA_MESSAGE_EN}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-fit mt-3 px-5 py-2.5 bg-gray-900 text-white hover:bg-black rounded-xs text-xs font-semibold tracking-wider uppercase transition-colors flex items-center gap-2 shadow-xs cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-4 h-4 fill-current" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+                </svg>
+                <span>{isId ? 'Hubungi via WhatsApp' : 'Contact via WhatsApp'}</span>
+              </a>
             </div>
-            <p className="text-xs text-gray-600 font-sans">
-              Bali Menari Academy © {new Date().getFullYear()}
-            </p>
           </div>
-          <div className="flex items-center gap-5">
-            <a
-              href={WHG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-gray-600 hover:text-gray-400 transition-colors font-sans tracking-wide"
-            >
-              Warma Heritage Group
-            </a>
-            <span className="text-gray-700 text-xs">·</span>
-            <a
-              href={WHG_BMA_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-gray-600 hover:text-gray-400 transition-colors font-sans tracking-wide"
-            >
-              {isId ? 'Profil Lengkap' : 'Full Profile'}
-            </a>
+
+          {/* Bottom */}
+          <div className="pt-8 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-500">
+            <p>© {new Date().getFullYear()} Bali Menari Academy. All rights reserved.</p>
+            <div className="flex items-center gap-4">
+              <span>Denpasar, Bali, Indonesia</span>
+              <span>•</span>
+              <a
+                href={WHG_BMA_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                Warma Heritage Group
+              </a>
+            </div>
           </div>
         </div>
       </footer>
 
-      {/* ===== BACK TO TOP ===== */}
-      <button
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 z-40 w-12 h-12 bg-gray-900 text-white flex items-center justify-center hover:bg-gray-700 transition-colors shadow-lg cursor-pointer"
-        aria-label={isId ? 'Kembali ke atas' : 'Back to top'}
-      >
-        ↑
-      </button>
-
       {/* ===== LIGHTBOX ===== */}
-      {lightbox && (
+      {lightboxPhoto && (
         <div
           role="dialog"
           aria-modal="true"
-          onClick={() => setLightbox(null)}
-          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+          onClick={() => setLightboxPhoto(null)}
+          className="fixed inset-0 z-50 bg-[#141414]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
         >
           <button
             type="button"
-            onClick={(e) => { e.stopPropagation(); setLightbox(null); }}
-            aria-label="Close"
-            className="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer border border-white/15"
+            onClick={(e) => { e.stopPropagation(); setLightboxPhoto(null); }}
+            aria-label={isId ? 'Tutup Pratinjau' : 'Close Preview'}
+            className="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-[#FAFAFA] flex items-center justify-center transition-colors cursor-pointer border border-white/15"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
               <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
@@ -782,21 +582,22 @@ export default function HomePage() {
             onClick={(e) => e.stopPropagation()}
             className="relative max-w-4xl max-h-[90vh] flex flex-col items-center"
           >
-            <div className="relative max-w-[90vw] max-h-[78vh] flex items-center justify-center">
+            <div className="relative w-auto max-w-[90vw] max-h-[78vh] flex items-center justify-center">
               <img
-                src={lightbox.src}
-                alt={isId ? lightbox.titleId : lightbox.titleEn}
+                src={lightboxPhoto.src}
+                alt={isId ? lightboxPhoto.titleId : lightboxPhoto.titleEn}
                 className="max-w-full max-h-[76vh] object-contain shadow-2xl"
               />
             </div>
-            <div className="mt-5 text-center text-white px-4 max-w-2xl">
-              <p className="font-sans text-sm text-gray-300 leading-relaxed">
-                {isId ? lightbox.titleId : lightbox.titleEn}
-              </p>
+            <div className="mt-5 text-center text-[#FAFAFA] px-4 max-w-2xl">
+              <h3 className="font-serif text-lg sm:text-xl text-[#FAFAFA] font-normal leading-relaxed">
+                {isId ? lightboxPhoto.titleId : lightboxPhoto.titleEn}
+              </h3>
             </div>
           </div>
         </div>
       )}
+
     </main>
   );
 }
