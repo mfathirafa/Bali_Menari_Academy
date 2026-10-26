@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/logo.png",
+        url: "/images/logo-bma-brown.png",
         width: 1200,
         height: 630,
         alt: "Bali Menari Academy",
@@ -68,14 +68,14 @@ export const metadata: Metadata = {
     title: "Bali Menari Academy | Tempat Les Tari Anak di Bali",
     description:
       "Tempat les tari anak dengan pilihan kelas tari tradisional Bali dan modern dance, yang menumbuhkan kepercayaan diri melalui gerakan.",
-    images: ["/images/logo.png"],
+    images: ["/images/logo-bma-brown.png"],
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
       { url: "/favicon.png", type: "image/png" },
+      { url: "/favicon.ico" },
     ],
-    apple: "/images/logo.png",
+    apple: "/images/logo-bma-brown.png",
   },
 };
 

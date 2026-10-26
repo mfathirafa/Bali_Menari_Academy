@@ -176,20 +176,23 @@ export default function HomePage() {
       }`}>
         <div className="max-w-[1440px] mx-auto px-6 sm:px-8 h-[80px] flex items-center justify-between">
 
-          {/* Logo */}
+          {/* Logo BMA */}
           <button
             onClick={() => scrollTo('hero')}
-            className="transition-opacity duration-300 hover:opacity-75 cursor-pointer py-2"
+            className="transition-opacity duration-300 hover:opacity-80 cursor-pointer py-1 flex items-center gap-3"
             aria-label="Bali Menari Academy - Beranda"
           >
             <Image
-              src="/Logo_clear.png"
-              alt="Warma Heritage Group"
-              width={130}
-              height={36}
-              className="object-contain"
+              src="/images/logo-bma-brown.png"
+              alt="Bali Menari"
+              width={65}
+              height={42}
+              className="h-10 w-auto object-contain"
               priority
             />
+            <span className="hidden sm:inline-block font-serif text-[17px] font-normal tracking-tight text-[#693A22] border-l border-gray-300 pl-3">
+              Bali Menari Academy
+            </span>
           </button>
 
           {/* Desktop nav */}
@@ -571,7 +574,18 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between gap-12 pb-12 border-b border-gray-300">
             {/* Logo & deskripsi */}
             <div className="flex flex-col gap-4 max-w-xs">
-              <img src="/Logo_clear.png" alt="Warma Heritage Group" className="w-32" />
+              <div className="flex items-center gap-3">
+                <Image
+                  src="/images/logo-bma-brown.png"
+                  alt="Bali Menari"
+                  width={65}
+                  height={42}
+                  className="h-10 w-auto object-contain"
+                />
+                <span className="font-serif text-[17px] font-normal tracking-tight text-[#693A22] border-l border-gray-300 pl-3">
+                  Bali Menari Academy
+                </span>
+              </div>
               <p className="text-sm text-gray-600 leading-relaxed">
                 {isId
                   ? 'Tempat les tari anak dengan pilihan kelas tari tradisional Bali dan modern dance, dalam lingkungan belajar yang menyenangkan dan inklusif.'
