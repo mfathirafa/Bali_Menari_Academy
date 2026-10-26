@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 // ===== CONSTANTS =====
@@ -113,8 +113,20 @@ export default function HomePage() {
   const [scrolled, setScrolled] = useState(false);
   const [lightboxPhoto, setLightboxPhoto] = useState<typeof GALLERY_PHOTOS[0] | null>(null);
   const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+  const itemRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const isId = lang === 'id';
+
+  // Auto-scroll list item into view inside the list container when active index changes
+  useEffect(() => {
+    const el = itemRefs.current[activePhotoIndex];
+    if (el) {
+      el.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [activePhotoIndex]);
 
   // Load lang from localStorage
   useEffect(() => {
@@ -410,53 +422,98 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== 5. GALERI — Activity Index (WHG-style baru) ===== */}
+      {/* ===== 5. GALERI — Activity Index (Independent Scroll List) ===== */}
       <section id="gallery" className="w-full bg-gray-50 py-24 sm:py-32 px-6 sm:px-8">
         <div className="max-w-[1440px] mx-auto">
-          <p className="flex items-center gap-5 text-xs tracking-[0.2em] text-gray-500 uppercase">
-            <span>{isId ? 'Dokumentasi' : 'Documentation'}</span>
-            <span className="h-px w-16 bg-gray-300" aria-hidden="true" />
-          </p>
-          <h2 className="mt-7 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] text-gray-900">
-            {isId ? 'Dokumentasi Kami' : 'Our Documentation'}
-          </h2>
+          {/* Section Header + Quick Navigation */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 pb-6 border-b border-gray-200">
+            <div>
+              <p className="flex items-center gap-5 text-xs tracking-[0.2em] text-gray-500 uppercase">
+                <span>{isId ? 'Dokumentasi' : 'Documentation'}</span>
+                <span className="h-px w-16 bg-gray-300" aria-hidden="true" />
+              </p>
+              <h2 className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] text-gray-900">
+                {isId ? 'Dokumentasi Kami' : 'Our Documentation'}
+              </h2>
+            </div>
 
-          <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-16 items-start">
-            {/* ── Numbered list (kiri) ── */}
-            <ol className="lg:col-span-5 border-t border-gray-200">
-              {GALLERY_PHOTOS.map((photo, i) => {
-                const title = isId ? photo.titleId : photo.titleEn;
-                const active = i === activePhotoIndex;
-                return (
-                  <li key={photo.id} className="border-b border-gray-200">
-                    <button
-                      type="button"
-                      onClick={() => setActivePhotoIndex(i)}
-                      aria-current={active}
-                      className={`w-full flex items-baseline gap-7 py-5 text-left cursor-pointer transition-colors ${
-                        active ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'
-                      }`}
-                    >
-                      <span className="font-mono text-xs tracking-widest shrink-0">
-                        {String(i + 1).padStart(2, '0')}
-                      </span>
-                      <span className="flex-1 text-base sm:text-lg leading-snug">{title}</span>
-                      {active && (
-                        <span className="shrink-0 text-gray-900" aria-hidden="true">→</span>
-                      )}
-                    </button>
-                  </li>
-                );
-              })}
-            </ol>
+            {/* Quick arrows to cycle photos */}
+            <div className="flex items-center gap-4 self-start sm:self-end">
+              <span className="font-mono text-xs tracking-widest text-gray-500 uppercase">
+                {String(activePhotoIndex + 1).padStart(2, '0')} / {String(GALLERY_PHOTOS.length).padStart(2, '0')}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => setActivePhotoIndex((prev) => (prev > 0 ? prev - 1 : GALLERY_PHOTOS.length - 1))}
+                  aria-label={isId ? 'Foto sebelumnya' : 'Previous photo'}
+                  className="w-10 h-10 rounded-full border border-gray-300 text-gray-800 flex items-center justify-center hover:bg-gray-200 hover:border-gray-900 transition-colors cursor-pointer"
+                >
+                  ←
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActivePhotoIndex((prev) => (prev < GALLERY_PHOTOS.length - 1 ? prev + 1 : 0))}
+                  aria-label={isId ? 'Foto berikutnya' : 'Next photo'}
+                  className="w-10 h-10 rounded-full border border-gray-300 text-gray-800 flex items-center justify-center hover:bg-gray-200 hover:border-gray-900 transition-colors cursor-pointer"
+                >
+                  →
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-y-8 lg:gap-x-14 items-start">
+            {/* ── Scrollable Numbered list (kiri) — scroll mandiri agar tidak menjebak scroll halaman ── */}
+            <div className="lg:col-span-5 flex flex-col">
+              <div className="flex items-center justify-between text-xs text-gray-400 mb-3 font-sans">
+                <span>{isId ? 'Daftar Kegiatan' : 'Activity List'}</span>
+                <span>{isId ? 'Scroll daftar untuk pilih ↓' : 'Scroll list to select ↓'}</span>
+              </div>
+              <div
+                tabIndex={0}
+                aria-label={isId ? 'Daftar scroll foto dokumentasi' : 'Documentation photos scroll list'}
+                className="border-t border-b border-gray-200 max-h-[380px] sm:max-h-[440px] lg:max-h-[490px] overflow-y-auto overscroll-contain pr-2 focus:outline-none [scrollbar-width:thin] [scrollbar-color:#CBD5E1_transparent]"
+              >
+                <ol className="divide-y divide-gray-200">
+                  {GALLERY_PHOTOS.map((photo, i) => {
+                    const title = isId ? photo.titleId : photo.titleEn;
+                    const active = i === activePhotoIndex;
+                    return (
+                      <li key={photo.id}>
+                        <button
+                          ref={(el) => { itemRefs.current[i] = el; }}
+                          type="button"
+                          onClick={() => setActivePhotoIndex(i)}
+                          aria-current={active}
+                          className={`w-full flex items-baseline gap-6 py-4 text-left cursor-pointer transition-colors ${
+                            active
+                              ? 'text-gray-900 font-semibold bg-gray-100/90 -mx-2 px-2 rounded-xs'
+                              : 'text-gray-500 hover:text-gray-800'
+                          }`}
+                        >
+                          <span className={`font-mono text-xs tracking-widest shrink-0 ${active ? 'text-gray-900 font-bold' : 'text-gray-400'}`}>
+                            {String(i + 1).padStart(2, '0')}
+                          </span>
+                          <span className="flex-1 text-sm sm:text-base leading-snug line-clamp-2">{title}</span>
+                          {active && (
+                            <span className="shrink-0 text-gray-900 font-bold" aria-hidden="true">→</span>
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+            </div>
 
             {/* ── Featured photo (kanan) ── */}
-            <figure className="m-0 lg:col-span-7 lg:pt-1 lg:sticky lg:top-24">
+            <figure className="m-0 lg:col-span-7">
               <button
                 type="button"
                 onClick={() => setLightboxPhoto(GALLERY_PHOTOS[activePhotoIndex])}
                 aria-label={isId ? 'Perbesar foto' : 'View photo'}
-                className="relative block w-full aspect-[4/3] overflow-hidden bg-gray-200 cursor-zoom-in focus-visible:outline-gray-900"
+                className="relative block w-full aspect-[4/3] overflow-hidden bg-gray-200 cursor-zoom-in group shadow-xs focus-visible:outline-gray-900 rounded-xs"
               >
                 <Image
                   key={GALLERY_PHOTOS[activePhotoIndex].id}
@@ -464,12 +521,22 @@ export default function HomePage() {
                   alt={isId ? GALLERY_PHOTOS[activePhotoIndex].titleId : GALLERY_PHOTOS[activePhotoIndex].titleEn}
                   fill
                   unoptimized
-                  className="object-cover"
+                  className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                   sizes="(max-width: 1024px) 100vw, 55vw"
                 />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center">
+                  <span className="opacity-0 group-hover:opacity-100 transition-opacity bg-black/75 text-white text-xs px-3 py-1.5 rounded-full pointer-events-none">
+                    🔍 {isId ? 'Klik untuk perbesar' : 'Click to enlarge'}
+                  </span>
+                </div>
               </button>
-              <figcaption className="mt-4 font-mono text-xs tracking-widest text-gray-500 uppercase">
-                {String(activePhotoIndex + 1).padStart(2, '0')} / {String(GALLERY_PHOTOS.length).padStart(2, '0')}
+              <figcaption className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-gray-500 font-sans">
+                <span className="font-medium text-gray-900 line-clamp-1">
+                  {isId ? GALLERY_PHOTOS[activePhotoIndex].titleId : GALLERY_PHOTOS[activePhotoIndex].titleEn}
+                </span>
+                <span className="font-mono text-gray-400 shrink-0">
+                  {String(activePhotoIndex + 1).padStart(2, '0')} / {String(GALLERY_PHOTOS.length).padStart(2, '0')}
+                </span>
               </figcaption>
             </figure>
           </div>
