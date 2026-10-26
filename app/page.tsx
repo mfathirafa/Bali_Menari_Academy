@@ -166,15 +166,17 @@ export default function HomePage() {
           {/* Logo */}
           <button
             onClick={() => scrollTo('hero')}
-            className="transition-opacity duration-300 hover:opacity-75 cursor-pointer py-2 flex items-center gap-3"
+            className="transition-opacity duration-300 hover:opacity-75 cursor-pointer py-2"
             aria-label="Bali Menari Academy - Beranda"
           >
-            <div className="w-8 h-8 relative flex-shrink-0">
-              <Image src="/images/logo.png" alt="Bali Menari Academy" fill sizes="32px" className="object-contain" priority />
-            </div>
-            <span className="hidden sm:block text-[15px] font-medium text-gray-900 tracking-[-0.01em]">
-              Bali Menari Academy
-            </span>
+            <Image
+              src="/Logo_clear.png"
+              alt="Warma Heritage Group"
+              width={130}
+              height={36}
+              className="object-contain"
+              priority
+            />
           </button>
 
           {/* Desktop nav */}
@@ -479,12 +481,7 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between gap-12 pb-12 border-b border-gray-300">
             {/* Logo & deskripsi */}
             <div className="flex flex-col gap-4 max-w-xs">
-              <div className="flex items-center gap-3">
-                <div className="w-8 h-8 relative flex-shrink-0">
-                  <Image src="/images/logo.png" alt="Bali Menari Academy" fill sizes="32px" className="object-contain" />
-                </div>
-                <span className="text-sm font-medium text-gray-900">Bali Menari Academy</span>
-              </div>
+              <img src="/Logo_clear.png" alt="Warma Heritage Group" className="w-32" />
               <p className="text-sm text-gray-600 leading-relaxed">
                 {isId
                   ? 'Tempat les tari anak dengan pilihan kelas tari tradisional Bali dan modern dance, dalam lingkungan belajar yang menyenangkan dan inklusif.'
