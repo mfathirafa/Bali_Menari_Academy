@@ -112,6 +112,7 @@ export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [lightboxPhoto, setLightboxPhoto] = useState<typeof GALLERY_PHOTOS[0] | null>(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
 
   const isId = lang === 'id';
 
@@ -409,47 +410,69 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== 5. GALERI (horizontal scroll, WHG-style) ===== */}
-      <section id="gallery" className="w-full bg-gray-50 py-24 px-8">
+      {/* ===== 5. GALERI — Activity Index (WHG-style baru) ===== */}
+      <section id="gallery" className="w-full bg-gray-50 py-24 sm:py-32 px-6 sm:px-8">
         <div className="max-w-[1440px] mx-auto">
-          <div className="mb-16">
-            <p className="text-xs tracking-[0.2em] text-gray-400 uppercase mb-3">
-              {isId ? 'Dokumentasi' : 'Documentation'}
-            </p>
-            <h2 className="text-3xl font-bold text-gray-900">
-              {isId ? 'Dokumentasi Kami' : 'Our Documentation'}
-            </h2>
-          </div>
-          {/* Horizontal scroll galeri */}
-          <div
-            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {GALLERY_PHOTOS.map((photo, i) => (
-              <div
-                key={photo.id}
-                onClick={() => setLightboxPhoto(photo)}
-                className="flex-shrink-0 snap-start w-72 sm:w-80 aspect-square bg-gray-200 relative overflow-hidden rounded-xs group shadow-xs hover:shadow-md transition-shadow cursor-pointer"
+          <p className="flex items-center gap-5 text-xs tracking-[0.2em] text-gray-500 uppercase">
+            <span>{isId ? 'Dokumentasi' : 'Documentation'}</span>
+            <span className="h-px w-16 bg-gray-300" aria-hidden="true" />
+          </p>
+          <h2 className="mt-7 text-4xl sm:text-5xl font-bold tracking-tight leading-[1.1] text-gray-900">
+            {isId ? 'Dokumentasi Kami' : 'Our Documentation'}
+          </h2>
+
+          <div className="mt-16 grid grid-cols-1 lg:grid-cols-12 gap-y-10 lg:gap-x-16 items-start">
+            {/* ── Numbered list (kiri) ── */}
+            <ol className="lg:col-span-5 border-t border-gray-200">
+              {GALLERY_PHOTOS.map((photo, i) => {
+                const title = isId ? photo.titleId : photo.titleEn;
+                const active = i === activePhotoIndex;
+                return (
+                  <li key={photo.id} className="border-b border-gray-200">
+                    <button
+                      type="button"
+                      onClick={() => setActivePhotoIndex(i)}
+                      aria-current={active}
+                      className={`w-full flex items-baseline gap-7 py-5 text-left cursor-pointer transition-colors ${
+                        active ? 'text-gray-900' : 'text-gray-500 hover:text-gray-700'
+                      }`}
+                    >
+                      <span className="font-mono text-xs tracking-widest shrink-0">
+                        {String(i + 1).padStart(2, '0')}
+                      </span>
+                      <span className="flex-1 text-base sm:text-lg leading-snug">{title}</span>
+                      {active && (
+                        <span className="shrink-0 text-gray-900" aria-hidden="true">→</span>
+                      )}
+                    </button>
+                  </li>
+                );
+              })}
+            </ol>
+
+            {/* ── Featured photo (kanan) ── */}
+            <figure className="m-0 lg:col-span-7 lg:pt-1 lg:sticky lg:top-24">
+              <button
+                type="button"
+                onClick={() => setLightboxPhoto(GALLERY_PHOTOS[activePhotoIndex])}
+                aria-label={isId ? 'Perbesar foto' : 'View photo'}
+                className="relative block w-full aspect-[4/3] overflow-hidden bg-gray-200 cursor-zoom-in focus-visible:outline-gray-900"
               >
                 <Image
-                  src={photo.src}
-                  alt={isId ? photo.titleId : photo.titleEn}
+                  key={GALLERY_PHOTOS[activePhotoIndex].id}
+                  src={GALLERY_PHOTOS[activePhotoIndex].src}
+                  alt={isId ? GALLERY_PHOTOS[activePhotoIndex].titleId : GALLERY_PHOTOS[activePhotoIndex].titleEn}
                   fill
                   unoptimized
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  sizes="(max-width: 640px) 288px, 320px"
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 55vw"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 pt-10 text-white">
-                  <p className="text-xs font-medium tracking-wide">
-                    {isId ? photo.titleId : photo.titleEn}
-                  </p>
-                </div>
-              </div>
-            ))}
+              </button>
+              <figcaption className="mt-4 font-mono text-xs tracking-widest text-gray-500 uppercase">
+                {String(activePhotoIndex + 1).padStart(2, '0')} / {String(GALLERY_PHOTOS.length).padStart(2, '0')}
+              </figcaption>
+            </figure>
           </div>
-          <p className="text-xs text-gray-400 text-right mt-4 tracking-wide">
-            {isId ? 'Geser untuk lihat lebih →' : 'Scroll to see more →'}
-          </p>
         </div>
       </section>
 
@@ -563,15 +586,15 @@ export default function HomePage() {
           role="dialog"
           aria-modal="true"
           onClick={() => setLightboxPhoto(null)}
-          className="fixed inset-0 z-50 bg-[#141414]/95 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 sm:p-8"
         >
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); setLightboxPhoto(null); }}
             aria-label={isId ? 'Tutup Pratinjau' : 'Close Preview'}
-            className="absolute top-6 right-6 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-[#FAFAFA] flex items-center justify-center transition-colors cursor-pointer border border-white/15"
+            className="absolute top-5 right-5 z-10 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white flex items-center justify-center transition-colors cursor-pointer border border-white/20"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
           </button>
@@ -579,17 +602,17 @@ export default function HomePage() {
             onClick={(e) => e.stopPropagation()}
             className="relative max-w-4xl max-h-[90vh] flex flex-col items-center"
           >
-            <div className="relative w-auto max-w-[90vw] max-h-[78vh] flex items-center justify-center">
+            <div className="relative w-auto max-w-[90vw] max-h-[80vh] flex items-center justify-center">
               <img
                 src={lightboxPhoto.src}
                 alt={isId ? lightboxPhoto.titleId : lightboxPhoto.titleEn}
-                className="max-w-full max-h-[76vh] object-contain shadow-2xl"
+                className="max-w-full max-h-[78vh] object-contain rounded-lg shadow-2xl"
               />
             </div>
-            <div className="mt-5 text-center text-[#FAFAFA] px-4 max-w-2xl">
-              <h3 className="font-serif text-lg sm:text-xl text-[#FAFAFA] font-normal leading-relaxed">
+            <div className="mt-4 text-center text-white px-4">
+              <p className="text-sm sm:text-base font-medium">
                 {isId ? lightboxPhoto.titleId : lightboxPhoto.titleEn}
-              </h3>
+              </p>
             </div>
           </div>
         </div>
